@@ -1,0 +1,35 @@
+version: '3.1'
+
+services:
+
+  wordpress:
+    image: wordpress
+    restart: always
+    ports:
+      - 80:80
+    environment:
+      WORDPRESS_DB_HOST: wpdb
+      WORDPRESS_DB_USER: admin
+      WORDPRESS_DB_PASSWORD: admin123456
+      WORDPRESS_DB_NAME: wp_test_db
+    volumes:
+      - wordpress:/var/www/html
+      - ./wordpress/wp-config.php:/var/www/html/wp-config.php
+      - ./wordpress/.htaccess:/var/www/html/.htaccess
+      - ./plugins/wp-test-plugin:/var/www/html/wp-content/plugins/wp-test-plugin
+      - ./themes:/var/www/html/wp-content/themes
+
+  wpdb:
+    image: mysql:5.7
+    restart: always
+    environment:
+      MYSQL_DATABASE: wp_test_db
+      MYSQL_USER: admin
+      MYSQL_PASSWORD: admin123456
+      MYSQL_RANDOM_ROOT_PASSWORD: '1'
+    ports:
+      -  "3306:3306"
+    volumes:
+      - ./db:/var/lib/mysql
+volumes:
+  wordpress:
